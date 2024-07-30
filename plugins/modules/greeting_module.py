@@ -111,7 +111,7 @@ def main():
     binary = "ansible"
     runner: CommandRunner = CommandRunner(binary)
 
-    run_module(module)
+    run_module(module, runner)
 
 if __name__ == '__main__':
     main()

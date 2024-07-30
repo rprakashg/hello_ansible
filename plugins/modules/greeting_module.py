@@ -51,10 +51,11 @@ greeting:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandrunner import CommandRunner # noqa E402
-from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandresult import CommandResult # noqa E402
+from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.vault import VaultHelper # noqa E402
 
-def run_module(module, runner):
+import os
+
+def run_module(module, vault):
     # seed the result dict in the object
     # we primarily care about changed and state
     # changed is if this module effectively modified the target
@@ -63,7 +64,7 @@ def run_module(module, runner):
     result = dict(
         changed=False,
         msg="",
-        ansible_version=""
+        decrpted=""
     )
 
     # if the user is working with this module in only check mode we do not
@@ -80,17 +81,11 @@ def run_module(module, runner):
         result['msg'] = "Hello %s" % (module.params['name'])
         result['changed'] = True
 
-    args = [
-        "--version",
-    ]
-    cr: CommandResult = runner.run(args)
-    if cr.exit_code == 0:
-        result["ansible_version"] = result.output
-    else:
-        result["msg"] = cr.error
-        module.fail_json(result)
-
-
+    if module.params["vault_file"] is not None:
+        vault_password = os.getenv("VAULT_SECRET")
+        decrypted = vault.parse(module.params["vault_file"], vault_password)
+        result["decrpted"] = decrypted
+        
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
@@ -99,6 +94,7 @@ def main():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         name=dict(type='str', required=False)
+        vault_file=dict(type=str, required=True)
     )
 
     # the AnsibleModule object will be our abstraction working with Ansible
@@ -109,10 +105,8 @@ def main():
         argument_spec=module_args,
         supports_check_mode=True
     )
-    binary = "ansible"
-    runner: CommandRunner = CommandRunner(binary)
-
-    run_module(module, runner)
+    helper: VaultHelper = VaultHelper()
+    run_module(module, helper)
 
 if __name__ == '__main__':
     main()

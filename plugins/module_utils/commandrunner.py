@@ -10,7 +10,7 @@ class CommandRunner(object):
     def __init__(self, binary) -> None:
         self.binary = binary
 
-    def run(self, command, subcommand, args) -> CommandResult:
+    def run(self, args) -> CommandResult:
         """
         Run command with subcommand and args in an executable binary
 

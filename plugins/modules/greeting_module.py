@@ -51,7 +51,10 @@ greeting:
 
 from ansible.module_utils.basic import AnsibleModule
 
-def run_module(module):
+from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandrunner import CommandRunner
+from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandresult import CommandResult
+
+def run_module(module, runner):
     # seed the result dict in the object
     # we primarily care about changed and state
     # changed is if this module effectively modified the target
@@ -59,7 +62,8 @@ def run_module(module):
     # for consumption, for example, in a subsequent task
     result = dict(
         changed=False,
-        msg=""
+        msg="",
+        ansible_version=""
     )
 
     # if the user is working with this module in only check mode we do not
@@ -75,7 +79,17 @@ def run_module(module):
     else:        
         result['msg'] = "Hello %s" % (module.params['name'])
         result['changed'] = True
-        
+
+    args = [
+        "--version",
+    ]
+    cr: CommandResult = runner.run("", "cluster", args)
+    if cr.exit_code == 0:
+        result["ansible_version"] = result.output
+    else:
+        module.fail_json()
+
+
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
@@ -94,6 +108,8 @@ def main():
         argument_spec=module_args,
         supports_check_mode=True
     )
+    binary = "ansible"
+    runner: CommandRunner = CommandRunner(binary)
 
     run_module(module)
 

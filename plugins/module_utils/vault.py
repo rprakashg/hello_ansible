@@ -1,7 +1,6 @@
 from ansible.parsing.vault import VaultLib, VaultSecret
 from ansible.constants import DEFAULT_VAULT_ID_MATCH
 
-import yaml
 import base64 
 
 class VaultHelper(object): 

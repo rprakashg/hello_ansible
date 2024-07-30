@@ -87,7 +87,8 @@ def run_module(module, runner):
     if cr.exit_code == 0:
         result["ansible_version"] = result.output
     else:
-        module.fail_json()
+        result["msg"] = cr.error
+        module.fail_json(result)
 
 
     # in the event of a successful module execution, you will want to

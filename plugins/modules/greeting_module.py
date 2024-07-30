@@ -83,7 +83,7 @@ def run_module(module, runner):
     args = [
         "--version",
     ]
-    cr: CommandResult = runner.run("", "", args)
+    cr: CommandResult = runner.run(None, None, args)
     if cr.exit_code == 0:
         result["ansible_version"] = result.output
     else:

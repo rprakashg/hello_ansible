@@ -51,12 +51,7 @@ greeting:
 
 from ansible.module_utils.basic import AnsibleModule
 
-def run_module():
-    # define available arguments/parameters a user can pass to the module
-    module_args = dict(
-        name=dict(type='str', required=False)
-    )
-
+def run_module(module):
     # seed the result dict in the object
     # we primarily care about changed and state
     # changed is if this module effectively modified the target
@@ -65,15 +60,6 @@ def run_module():
     result = dict(
         changed=False,
         msg=""
-    )
-
-    # the AnsibleModule object will be our abstraction working with Ansible
-    # this includes instantiation, a couple of common attr would be the
-    # args/params passed to the execution, as well as if the module
-    # supports check mode
-    module = AnsibleModule(
-        argument_spec=module_args,
-        supports_check_mode=True
     )
 
     # if the user is working with this module in only check mode we do not
@@ -95,7 +81,21 @@ def run_module():
     module.exit_json(**result)
 
 def main():
-    run_module()
+    # define available arguments/parameters a user can pass to the module
+    module_args = dict(
+        name=dict(type='str', required=False)
+    )
+
+    # the AnsibleModule object will be our abstraction working with Ansible
+    # this includes instantiation, a couple of common attr would be the
+    # args/params passed to the execution, as well as if the module
+    # supports check mode
+    module = AnsibleModule(
+        argument_spec=module_args,
+        supports_check_mode=True
+    )
+
+    run_module(module)
 
 if __name__ == '__main__':
     main()

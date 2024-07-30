@@ -51,11 +51,11 @@ greeting:
 
 from ansible.module_utils.basic import AnsibleModule
 
-#from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.vault import VaultHelper # noqa E402
+from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.vault import VaultHelper # noqa E402
 
 import os
 
-def run_module(module):
+def run_module(module, vault):
     # seed the result dict in the object
     # we primarily care about changed and state
     # changed is if this module effectively modified the target
@@ -81,10 +81,10 @@ def run_module(module):
         result['msg'] = "Hello %s" % (module.params['name'])
         result['changed'] = True
 
-    #if module.params["vault_file"] is not None:
-    #    vault_password = os.getenv("VAULT_SECRET")
-    #    decrypted = vault.parse(module.params["vault_file"], vault_password)
-    #    result["decrypted"] = decrypted
+    if module.params["vault_file"] is not None:
+        vault_password = os.getenv("VAULT_SECRET")
+        decrypted = vault.parse(module.params["vault_file"], vault_password)
+        result["decrypted"] = decrypted
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
@@ -105,8 +105,8 @@ def main():
         argument_spec=module_args,
         supports_check_mode=True
     )
-    #helper: VaultHelper = VaultHelper()
-    run_module(module) #, helper)
+    helper: VaultHelper = VaultHelper()
+    run_module(module, helper)
 
 if __name__ == '__main__':
     main()

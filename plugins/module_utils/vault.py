@@ -10,7 +10,9 @@ class VaultHelper(object):
 
         This is a helper utility for parsing encrypted ansible vault files
     """
-     
+    def __init__(self) -> None:
+        return
+
     def parse(vault_file, vault_password):
         vault_secret = VaultSecret(base64.b64encode(vault_password.encode('utf-8')))
         vault = VaultLib([(DEFAULT_VAULT_ID_MATCH, vault_secret)])

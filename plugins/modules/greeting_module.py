@@ -51,8 +51,8 @@ greeting:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandrunner import CommandRunner
-from ansible_collections.rprakashg.hello_ansible.plugins.module_utils.commandresult import CommandResult
+from rprakashg.hello_ansible.plugins.module_utils.commandrunner import CommandRunner
+from rprakashg.hello_ansible.plugins.module_utils.commandresult import CommandResult
 
 def run_module(module, runner):
     # seed the result dict in the object

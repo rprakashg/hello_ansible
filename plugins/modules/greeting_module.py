@@ -64,7 +64,7 @@ def run_module():
     # for consumption, for example, in a subsequent task
     result = dict(
         changed=False,
-        greeting=""
+        msg=""
     )
 
     # the AnsibleModule object will be our abstraction working with Ansible
@@ -85,9 +85,9 @@ def run_module():
     # manipulate or modify the state as needed (this is going to be the
     # part where your module will do what it needs to do)
     if module.params['name'] is None:
-        result['greeting'] = "Hello"
+        result['msg'] = "Hello"
     else:        
-        result['greeting'] = "Hello %s" % (module.params['name'])
+        result['msg'] = "Hello %s" % (module.params['name'])
         result['changed'] = True
         
     # in the event of a successful module execution, you will want to

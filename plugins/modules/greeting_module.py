@@ -93,7 +93,7 @@ def run_module(module, vault):
 def main():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        name=dict(type='str', required=False)
+        name=dict(type='str', required=False),
         vault_file=dict(type=str, required=True)
     )
 
